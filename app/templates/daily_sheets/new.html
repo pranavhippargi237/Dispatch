@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}New Daily Sheet - Dispatch System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Create New Daily Sheet</h2>
+    </div>
+    <div class="card-body">
+        <form id="dailySheetForm" method="POST" action="{{ url_for('daily_sheet.create') }}">
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" class="form-control" id="date" name="date" required>
+            </div>
+
+            <div id="jobSections">
+                <div class="job-section card mb-3">
+                    <div class="card-body">
+                        <h3>Job Section 1</h3>
+                        <div class="mb-3">
+                            <label class="form-label">Job</label>
+                            <select name="job_id[]" class="form-control" required>
+                                <option value="">Select Job...</option>
+                                {% for job in jobs %}
+                                <option value="{{ job.id }}">{{ job.name }} - {{ job.location }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="assignments">
+                            <div class="assignment row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Employee</label>
+                                    <select name="employee_ids[]" class="form-control" required>
+                                        <option value="">Select Employee...</option>
+                                        {% for employee in employees %}
+                                        <option value="{{ employee.id }}">{{ employee.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Equipment</label>
+                                    <select name="equipment_ids[]" class="form-control" required>
+                                        <option value="">Select Equipment...</option>
+                                        {% for item in equipment %}
+                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Start Time</label>
+                                    <input type="time" name="start_times[]" class="form-control" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">End Time</label>
+                                    <input type="time" name="end_times[]" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-danger btn-remove-assignment form-control">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary btn-add-assignment mt-3">Add Assignment</button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary mb-3" id="addJobSection">Add Job Section</button>
+            <button type="submit" class="btn btn-success">Create Daily Sheet</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/daily_sheet.js') }}"></script>
+{% endblock %}
